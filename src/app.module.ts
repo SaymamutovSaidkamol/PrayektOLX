@@ -7,9 +7,11 @@ import { CategoryModule } from './category/category.module';
 import { RegionModule } from './region/region.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UploadModule } from './uploads/upload.module';
+import { LikeModule } from './like/like.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
-  imports: [UsersModule, BannersModule, CategoryModule, RegionModule, MongooseModule.forRoot('mongodb://127.0.0.1:27017/OLX'), UploadModule],
+  imports: [UsersModule, BannersModule, CategoryModule, RegionModule, MongooseModule.forRoot('mongodb://127.0.0.1:27017/OLX'), UploadModule, LikeModule, CommentModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -112,10 +112,9 @@ export class CategoryService {
 
     return this.CategoryModel.find(query)
       .sort({
-        [sortBy]: order === 'asc' ? 1 : -1, // ✅ Shu yerda to‘g‘rilandi
+        [sortBy]: order === 'asc' ? 1 : -1,
       })
       .skip(skip)
       .limit(parseInt(limit, 10));
   }
-
 }
