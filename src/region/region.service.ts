@@ -13,7 +13,11 @@ import { Model } from 'mongoose';
 export class RegionService {
   constructor(@InjectModel(Region.name) private RegionModel: Model<Region>) {}
 
-  async create(data: CreateRegionDto) {
+  async create(data: CreateRegionDto, req: Request) {
+    if (req['user'].type !== 'ADMIN') {
+      throw new BadRequestException('Sorry, you are not an Admin.');
+    }
+
     let check = await this.RegionModel.findOne({ name: data.name });
 
     if (check) {
@@ -40,7 +44,11 @@ export class RegionService {
     return { data: OneRegion };
   }
 
-  async update(id: string, data: UpdateRegionDto) {
+  async update(id: string, data: UpdateRegionDto, req: Request) {
+    if (req['user'].type !== 'ADMIN') {
+      throw new BadRequestException('Sorry, you are not an Admin.');
+    }
+
     const chekRegion = await this.RegionModel.findById(id);
 
     if (!chekRegion) {
@@ -60,7 +68,11 @@ export class RegionService {
     return { message: 'Region Updated Successfully', data: updateRegion };
   }
 
-  async remove(id: string) {
+  async remove(id: string, req: Request) {
+    if (req['user'].type !== 'ADMIN') {
+      throw new BadRequestException('Sorry, you are not an Admin.');
+    }
+
     const chekRegion = await this.RegionModel.findById(id);
 
     if (!chekRegion) {

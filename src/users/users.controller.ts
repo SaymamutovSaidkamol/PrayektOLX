@@ -9,16 +9,20 @@ import {
   UsePipes,
   ValidationPipe,
   Query,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, LoginDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AuthGuard)
   @ApiOperation({
     summary: 'Hududlarni qidirish',
     description: 'Berilgan parametrlar bo‘yicha hududlarni qidirish',
@@ -37,8 +41,8 @@ export class UsersController {
     example: 'asc',
   })
   @Get('/query')
-  query(@Query() data: any) {
-    return this.usersService.query(data);
+  query(@Query() data: any,  @Req() req: Request) {
+    return this.usersService.query(data, req);
   }
 
   @Post('/register')
@@ -53,23 +57,27 @@ export class UsersController {
     return this.usersService.login(data);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Req() req: Request) {
+    return this.usersService.findAll(req);
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  findOne(@Param('id') id: string, @Req() req: Request) {
+    return this.usersService.findOne(id, req);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: UpdateUserDto) {
-    return this.usersService.update(id, data);
+  update(@Param('id') id: string, @Body() data: UpdateUserDto, @Req() req: Request) {
+    return this.usersService.update(id, data, req);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  remove(@Param('id') id: string, @Req() req: Request) {
+    return this.usersService.remove(id, req);
   }
 }

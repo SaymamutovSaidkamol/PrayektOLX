@@ -1,19 +1,32 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Banner } from 'src/banners/entities/banner.entity';
 import { Comment } from './entities/comment.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class CommentService {
   constructor(
     @InjectModel(Comment.name) private CommentModel: Model<Comment>,
     @InjectModel(Banner.name) private BannertModel: Model<Banner>,
+    @InjectModel(User.name) private UserModel: Model<User>,
   ) {}
 
-  async create(data: CreateCommentDto) {
+  async create(data: CreateCommentDto, req: Request) {
+    data.user = req['user']._id;
+
+    const checkUser = await this.UserModel.findById(data.user);
+
+    if (!checkUser) {
+      throw new NotFoundException('User Not Found');
+    }
+
     const checkBanner = await this.BannertModel.findOne({ _id: data.banner });
 
     if (!checkBanner) {
@@ -38,7 +51,14 @@ export class CommentService {
     return { data: allComment };
   }
 
-  async remove(id: string) {
+  async remove(id: string, req: Request) {
+    
+    if (id !== req['user']._id) {
+      throw new BadRequestException(
+        "You cannot delete another person's comment.",
+      );
+    }
+
     const checkComment = await this.CommentModel.findById(id);
 
     if (!checkComment) {
@@ -70,6 +90,6 @@ export class CommentService {
         [sortBy]: order === 'asc' ? 1 : -1,
       })
       .skip(skip)
-      .limit(parseInt(limit, 10))
+      .limit(parseInt(limit, 10));
   }
 }

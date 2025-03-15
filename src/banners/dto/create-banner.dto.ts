@@ -18,11 +18,6 @@ export class CreateBannerDto {
   @ApiProperty({ example: '67d4a1335e4adab7903ab275',  })
   category: string;
 
-  @IsString()
-  @ApiProperty({ example: '67d3d4abddcbfbff3f1df811' })
-  region: string;
-  @IsString()
-
   @ApiProperty({ example: '67d3d4abddcbfbff3f1df811' })
   user: string;
 }

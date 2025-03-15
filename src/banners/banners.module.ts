@@ -7,18 +7,18 @@ import {
   Category,
   CategorySchema,
 } from 'src/category/entities/category.entity';
-import { Region, RegionSchema } from 'src/region/entities/region.entity';
 import { User, UserSchema } from 'src/users/entities/user.entity';
 import { Like, LikeSchema } from 'src/like/entities/like.entity';
+import { BannerItem, BannerItemSchema } from 'src/banner-item/entities/banner-item.entity';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Banner.name, schema: BannerSchema },
       { name: Category.name, schema: CategorySchema }, 
-      { name: Region.name, schema: RegionSchema },
       { name: User.name, schema: UserSchema },
       { name: Like.name, schema: LikeSchema },
+      { name: BannerItem.name, schema: BannerItemSchema },
     ]),
   ],
   controllers: [BannersController],

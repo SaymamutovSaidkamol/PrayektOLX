@@ -11,10 +11,9 @@ export class CreateCommentDto {
   star: number;
 
   @IsNumber()
-  @ApiProperty({ example: "67d4a159315b5aa64d108641" })
+  @ApiProperty({ example: '67d4a159315b5aa64d108641' })
   banner: string;
 
-  @IsNumber()
-  @ApiProperty({ example: "67d4a159315b5aa64d108641" })
+  @IsString()
   user: string;
 }
