@@ -74,20 +74,30 @@ export class UsersService {
     }
 
     let token = this.jwtService.sign({
-      _id: findUser.password,
+      _id: findUser.id,
       type: findUser.type,
     });
 
     return { message: 'Login Successfully Completed', token };
   }
 
-  async findAll() {
+  async findAll(req: Request) {
+    if (req['user'].type !== 'ADMIN') {
+      throw new BadRequestException(
+        'You cannot change your other information.',
+      );
+    }
     let allUser = await this.UserModel.find().populate('region').exec();
 
     return { data: allUser };
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, req: Request) {
+    if (req['user']._id !== id || req['user'].type !== 'ADMIN') {
+      throw new BadRequestException(
+        'You cannot change your other information.',
+      );
+    }
     const oneUser = await this.UserModel.findById(id).populate('region').exec();
 
     if (!oneUser) {
@@ -97,7 +107,13 @@ export class UsersService {
     return { data: oneUser };
   }
 
-  async update(id: string, data: UpdateUserDto) {
+  async update(id: string, data: UpdateUserDto, req: Request) {
+    if (req['user']._id !== id || req['user'].type !== 'ADMIN') {
+      throw new BadRequestException(
+        'You cannot change your other information.',
+      );
+    }
+
     const oneUser = await this.UserModel.findById(id);
 
     if (!oneUser) {
@@ -121,7 +137,13 @@ export class UsersService {
     return { message: 'User Updated Succesfully', data: UpdatedUser };
   }
 
-  async remove(id: string) {
+  async remove(id: string, req: Request) {
+    if (req['user']._id !== id || req['user'].type !== 'ADMIN') {
+      throw new BadRequestException(
+        'You cannot change your other information.',
+      );
+    }
+
     let CheckUser = await this.UserModel.findById(id);
 
     if (!CheckUser) {
@@ -133,7 +155,7 @@ export class UsersService {
     return { message: 'User Deleted Succesfully', data: DeletedUser };
   }
 
-  async query(data: any) {
+  async query(data: any, req: Request) {
     let {
       name,
       phone,
@@ -146,6 +168,12 @@ export class UsersService {
       order,
       ...filters
     } = data;
+
+    if (req['user'].type !== 'ADMIN') {
+      throw new BadRequestException(
+        'You cannot change your other information.',
+      );
+    }
 
     const query: any = { ...filters };
 

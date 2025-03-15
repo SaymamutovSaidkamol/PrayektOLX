@@ -9,9 +9,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UploadModule } from './uploads/upload.module';
 import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
+import { BannerItemModule } from './banner-item/banner-item.module';
 
 @Module({
-  imports: [UsersModule, BannersModule, CategoryModule, RegionModule, MongooseModule.forRoot('mongodb://127.0.0.1:27017/OLX'), UploadModule, LikeModule, CommentModule],
+  imports: [UsersModule, BannersModule, CategoryModule, RegionModule, MongooseModule.forRoot('mongodb://127.0.0.1:27017/OLX'), UploadModule, LikeModule, CommentModule, BannerItemModule],
   controllers: [AppController],
   providers: [AppService],
 })

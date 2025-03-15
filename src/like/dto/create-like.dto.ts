@@ -7,6 +7,5 @@ export class CreateLikeDto {
     banner: string
 
     @IsString()
-    @ApiProperty({example: "67d492ff199761c1a51a0a22"})
     user: string
 }

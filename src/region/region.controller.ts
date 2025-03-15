@@ -7,11 +7,14 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { RegionService } from './region.service';
 import { CreateRegionDto } from './dto/create-region.dto';
 import { UpdateRegionDto } from './dto/update-region.dto';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Regions') // API nomi
 @Controller('region')
@@ -31,9 +34,10 @@ export class RegionController {
     return this.regionService.query(data);
   }
 
+  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createRegionDto: CreateRegionDto) {
-    return this.regionService.create(createRegionDto);
+  create(@Body() createRegionDto: CreateRegionDto, @Req() req: Request) {
+    return this.regionService.create(createRegionDto, req);
   }
 
   @Get()
@@ -46,13 +50,15 @@ export class RegionController {
     return this.regionService.findOne(id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRegionDto: UpdateRegionDto) {
-    return this.regionService.update(id, updateRegionDto);
+  update(@Param('id') id: string, @Body() updateRegionDto: UpdateRegionDto, @Req() req: Request) {
+    return this.regionService.update(id, updateRegionDto, req);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.regionService.remove(id);
+  remove(@Param('id') id: string, @Req() req: Request) {
+    return this.regionService.remove(id, req);
   }
 }

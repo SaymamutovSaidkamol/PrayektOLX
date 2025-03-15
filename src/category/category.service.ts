@@ -26,8 +26,10 @@ export class CategoryService {
     @InjectModel(Category.name) private CategoryModel: Model<Category>,
   ) {}
 
-  async create(data: CreateCategoryDto) {
-    console.log('Received data:', data);
+  async create(data: CreateCategoryDto, req: Request) {
+    if (req['user'].type !== 'ADMIN') {
+      throw new BadRequestException('Sorry, you are not an Admin.');
+    }
 
     const checkCateg = await this.CategoryModel.findOne({ name: data.name });
 
@@ -56,7 +58,11 @@ export class CategoryService {
     return { data: OneCategory };
   }
 
-  async update(id: string, data: UpdateCategoryDto) {
+  async update(id: string, data: UpdateCategoryDto, req: Request) {
+    if (req['user'].type !== 'ADMIN') {
+      throw new BadRequestException('Sorry, you are not an Admin.');
+    }
+
     const chekCategory = await this.CategoryModel.findById(id);
 
     if (!chekCategory) {
@@ -80,7 +86,11 @@ export class CategoryService {
     return { message: 'Category Updated Successfully', data: updateCategory };
   }
 
-  async remove(id: string) {
+  async remove(id: string, req: Request) {
+    if (req['user'].type !== 'ADMIN') {
+      throw new BadRequestException('Sorry, you are not an Admin.');
+    }
+
     const chekCategory = await this.CategoryModel.findById(id);
 
     if (!chekCategory) {
